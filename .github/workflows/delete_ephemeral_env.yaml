@@ -1,0 +1,18 @@
+name: Delete Ephemeral Environment
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  delete-ephemeral-env:
+    runs-on: ubuntu-latest
+    env:
+      REPOSITORY: ${{ github.event.repository.name }}
+      PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+      CANYON_AUTH_TOKEN: ${{ secrets.CANYON_DEMO_CANYON_AUTH_TOKEN_PROD }}
+      CANYON_ORG: ${{ secrets.CANYON_DEMO_CANYON_ORG }}
+      CANYON_API_URL: ${{ secrets.CANYON_DEMO_CANYON_API_URL_PROD }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Delete environment
+        run: ./canyon delete environment $REPOSITORY ephemeral-pr-$PULL_REQUEST_NUMBER
