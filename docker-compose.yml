@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: todo-backend
+    environment:
+      - USE_LOCAL_STORAGE=true
+      - BUCKET_NAME=${BUCKET_NAME:-demo-todo-bucket}
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    networks:
+      todo-network:
+        aliases:
+          - backend
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: todo-frontend
+    environment:
+      - BACKEND_HOST=backend
+      - BACKEND_PORT=8080
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      todo-network:
+        aliases:
+          - frontend
+    restart: unless-stopped
+
+networks:
+  todo-network:
+    driver: bridge

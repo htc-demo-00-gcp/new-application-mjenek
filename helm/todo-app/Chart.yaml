@@ -1,0 +1,7 @@
+apiVersion: v2
+name: todo-app
+description: A To-Do application demonstrating Google Cloud Storage access via Kubernetes Service Accounts
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+

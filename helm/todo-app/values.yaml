@@ -1,0 +1,72 @@
+# Image configuration
+image:
+  backend:
+    repository: your-dockerhub/todo-backend
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  frontend:
+    repository: your-dockerhub/todo-frontend
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+# Backend configuration
+backend:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  env:
+    BUCKET_NAME: "demo-todo-bucket"
+    PORT: "8080"
+  # Health check configuration
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Frontend configuration
+frontend:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+  # Health check configuration
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+
+# Service configuration
+service:
+  type: LoadBalancer
+  backend:
+    port: 8080
+    targetPort: 8080
+  frontend:
+    port: 80
+    targetPort: 80
+
+# ServiceAccount configuration (assumes platform orchestrator injects it)
+serviceAccount:
+  name: ""  # Name of existing ServiceAccount to use
